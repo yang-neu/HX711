@@ -6,6 +6,7 @@ import time
 import datetime
 import RPi.GPIO as GPIO  # import GPIO
 import Adafruit_DHT
+from bme280 import Bme280
 from hx711 import HX711  # import the class HX711
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
@@ -49,6 +50,9 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
 		# Required input parameters are only 'dout_pin' and 'pd_sck_pin'
 		hx = HX711(dout_pin=21, pd_sck_pin=20)
 
+		# i2c_address=0x76, bus_number=1
+		bme280 = Bme280(0x76, 1)
+
 		reading = hx.get_raw_data_mean()
 		if reading:  # always check if you get correct value or only False
 			# now the value is close to 0
@@ -60,12 +64,21 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
 
 		if len(cmd) >= 3:
 			if cmd[2] == "get_raw_w_temp":
-				print('Reading temperature...')
-				humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-				if humidity is None or temperature is None: return
+				print('Reading inner temperature...')
+				in_humi, in_temp = Adafruit_DHT.read_retry(sensor, pin)
+
+				print('Reading external temperature...')
+				ex_temp, ex_humi, ex_bar = bme280.get_data()
+				if in_humi is None or in_temp is None or ex_humi is None or ex_temp is None or ex_bar is None: return
+
 				payload={
 					"cmd":msg.topic,
-					"temp": temperature,
+					"temp": in_temp,
+					"in_temp": in_temp,
+					"in_humi": in_humi,
+					"ex_temp": ex_temp,
+					"ex_humi": ex_humi,
+					"ex_bar": ex_bar,
 					"weight_raw": reading
 					}
 				result = json.dumps(payload)
