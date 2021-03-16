@@ -441,9 +441,17 @@ class HX711:
         # do required number of readings
         for _ in range(readings):
             data_list.append(self._read())
+
         data_mean = False
+        if 0 == len(data_list):
+            print('failed to read raw data')
+            return int(data_mean)
+
         if readings > 2 and self._data_filter:
             filtered_data = self._data_filter(data_list)
+            if 0 == len(filtered_data):
+                print('failed to filter raw data')
+                return int(data_mean)
             if self._debug_mode:
                 print('data_list: {}'.format(data_list))
                 print('filtered_data list: {}'.format(filtered_data))
@@ -671,6 +679,8 @@ def outliers_filter(data_list):
     for num in data_list:
         if num:
             data.append(num)
+    if 0 == len(data):
+        return data
     # set 'm' to lower value to remove more outliers
     # set 'm' to higher value to keep more data samples (also some outliers)
     m = 2.0
@@ -689,6 +699,7 @@ def outliers_filter(data_list):
     else:
         # mdev is 0. Therefore all data samples in the list data have the same value.
         return data
+
     filtered_data = []
     for i in range(len(data)):
         if s[i] < m:

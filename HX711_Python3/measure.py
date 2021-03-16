@@ -72,7 +72,7 @@ try:
 
     print('Current weight on the scale in grams is: ')
     while True:
-        print(hx.get_weight_mean(20), 'g')
+        print(hx.get_weight_mean(30), 'g')
 
 except (KeyboardInterrupt, SystemExit):
     print('Bye :)')
