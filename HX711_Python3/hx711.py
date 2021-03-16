@@ -443,7 +443,6 @@ class HX711:
             data_list.append(self._read())
 
         data_mean = False
-        print('data_list len(%d)' % len(data_list))
         if 0 == len(data_list):
             print('failed to read raw data')
             return int(data_mean)
@@ -681,7 +680,6 @@ def outliers_filter(data_list):
         if num:
             data.append(num)
     if 0 == len(data):
-        print('No Data!')
         return data
     # set 'm' to lower value to remove more outliers
     # set 'm' to higher value to keep more data samples (also some outliers)
@@ -701,7 +699,7 @@ def outliers_filter(data_list):
     else:
         # mdev is 0. Therefore all data samples in the list data have the same value.
         return data
-    print('mdev = %d' % mdev)
+
     filtered_data = []
     for i in range(len(data)):
         if s[i] < m:
