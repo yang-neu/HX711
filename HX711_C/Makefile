@@ -12,6 +12,10 @@ hx711.o: hx711.c hx711.h gb_common.h
 read_scale : read_scale.c gb_common.o hx711.o
 	$(CC) $(CFLAGS) -g -o read_scale read_scale.c gb_common.o hx711.o
 
+read_raw: read_raw.c gb_common.o hx711.o
+	$(CC) $(CFLAGS) -g -o read_raw read_raw.c gb_common.o hx711.o
+
 clean:
 	rm -f *.o
 	rm -f read_scale
+	rm -f read_raw
