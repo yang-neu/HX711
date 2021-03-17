@@ -74,11 +74,12 @@ int main(int argc, char **argv)
     printf("\n1 - Print number of items on the scale.");
     printf("\n2 - Print raw mean value.");
     printf("\n3 - Zero the scale.");
-    printf("\n4 - Set new item.\n");
+    printf("\n4 - Set new item.");
+    printf("\n5 - Read Raw Continuously.\n");
 
     int choice = 0;
     get_int(&choice);
-    if (choice < 1 || choice > 4)
+    if (choice < 1 || choice > 5)
     {
       printf("\nWrong choice!\nExiting\n\n");
       flag = false;
@@ -121,6 +122,13 @@ int main(int argc, char **argv)
         single_item_weight = getDataMean(&hx, samples);
         printf("\nSingle_item_weight: %lf\n", single_item_weight - hx.offset_A_128);
         printf("\nSet up is done.\n");
+        break;
+      case 5:
+	while(1){
+		raw_data = getRawDataMean(&hx, samples);
+		printf("\nRaw data: %d", raw_data);
+		sleep(1);
+	}
         break;
       }
     }
